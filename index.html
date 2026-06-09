@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>CRM Stress Test Report</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+* {
+    box-sizing: border-box;
+    font-family: Tahoma, 'Segoe UI', sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #f5f7fa;
+    color: #222;
+    line-height: 1.6;
+}
+
+.header {
+    background: #1f2937;
+    color: white;
+    padding: 40px;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 34px;
+}
+
+.header p {
+    margin-top: 10px;
+    opacity: .8;
+    font-size: 14px;
+}
+
+.container {
+    width: 1400px;
+    max-width: 95%;
+    margin: auto;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-top: -35px;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.08);
+    text-align: center;
+}
+
+.card h3 {
+    margin: 0;
+    color: #777;
+    font-size: 14px;
+}
+
+.card .value {
+    margin-top: 10px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #1f2937;
+}
+
+.section {
+    background: white;
+    margin-top: 25px;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.05);
+}
+
+.section h2 {
+    margin-top: 0;
+    border-right: 5px solid #2563eb;
+    padding-right: 10px;
+    font-size: 20px;
+    color: #1f2937;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+th {
+    background: #1f2937;
+    color: white;
+    font-weight: normal;
+}
+
+td, th {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+tr:nth-child(even) {
+    background-color: #f9fafb;
+}
+
+.chart-container {
+    position: relative;
+    height: 400px;
+    margin: 20px 0;
+    padding: 20px;
+    background: #fafafa;
+    border-radius: 8px;
+}
+
+.chart-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.status-good {
+    color: #16a34a;
+    font-weight: bold;
+}
+
+.status-warning {
+    color: #d97706;
+    font-weight: bold;
+}
+
+.status-bad {
+    color: #dc2626;
+    font-weight: bold;
+}
+
+.status-critical {
+    color: #991b1b;
+    font-weight: bold;
+    background-color: #fee2e2;
+}
+
+.note {
+    font-size: 12px;
+    color: #666;
+    margin-top: 10px;
+    font-style: italic;
+}
+
+ul {
+    padding-right: 25px;
+}
+
+ul li {
+    margin-bottom: 8px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <div class="container">
+        <h1>گزارش استرس تست سامانه CRM</h1>
+        <p>
+            Apache JMeter 5.1.1 | تاریخ تست: 1405/03/19 | تهیه شده برای: Loki
+        </p>
+    </div>
+</div>
+
+<div class="container">
+
+    <div class="cards">
+        <div class="card">
+            <h3>حداکثر کاربران تست شده</h3>
+            <div class="value">500</div>
+        </div>
+        <div class="card">
+            <h3>Peak Throughput</h3>
+            <div class="value">11.9 req/s</div>
+        </div>
+        <div class="card">
+            <h3>بیشترین Response Time</h3>
+            <div class="value" style="color:#dc2626">404,282 ms</div>
+        </div>
+        <div class="card">
+            <h3>حداکثر Error Rate</h3>
+            <div class="value" style="color:#dc2626">47.17%</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>اطلاعات محیط تست</h2>
+        <table>
+            <tr>
+                <th>عنوان</th>
+                <th>مقدار</th>
+            </tr>
+            <tr>
+                <td>نام پروژه</td>
+                <td>سامانه CRM (API: GetCurrentUserInfo)</td>
+            </tr>
+            <tr>
+                <td>ابزار تست</td>
+                <td>Apache JMeter 5.1.1</td>
+            </tr>
+            <tr>
+                <td>سرور هدف</td>
+                <td>Windows Server 2019</td>
+            </tr>
+            <tr>
+                <td>CPU</td>
+                <td>4 vCore</td>
+            </tr>
+            <tr>
+                <td>RAM</td>
+                <td>16 GB</td>
+            </tr>
+            <tr>
+                <td>Storage</td>
+                <td>NVMe SSD</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>سناریوهای تست</h2>
+        <table>
+            <tr>
+                <th>سناریو</th>
+                <th>کاربران همزمان (Threads)</th>
+                <th>هدف</th>
+                <th>وضعیت</th>
+            </tr>
+            <tr>
+                <td>بار سبک</td>
+                <td>100</td>
+                <td>بررسی عملکرد پایه و پایداری اولیه</td>
+                <td class="status-good">✅ پایدار</td>
+            </tr>
+            <tr>
+                <td>بار متوسط</td>
+                <td>200</td>
+                <td>بررسی رفتار سیستم در بار دو برابر</td>
+                <td class="status-good">✅ پایدار</td>
+            </tr>
+            <tr>
+                <td>بار سنگین</td>
+                <td>300</td>
+                <td>بررسی نقطه اوج توان عملیاتی</td>
+                <td class="status-warning">️ اوج Throughput</td>
+            </tr>
+            <tr>
+                <td>نقطه شکست</td>
+                <td>400</td>
+                <td>بررسی پایداری در شرایط اشباع</td>
+                <td class="status-bad">🔴 نقطه شکست</td>
+            </tr>
+            <tr>
+                <td>بیش از حد ظرفیت</td>
+                <td>500</td>
+                <td>بررسی ظرفیت شکست و مکانیزم Recovery</td>
+                <td class="status-critical">❌ بیش از ظرفیت</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>نتایج تست (Aggregate Report)</h2>
+        <table>
+            <tr>
+                <th>Users</th>
+                <th>Samples</th>
+                <th>Average (ms)</th>
+                <th>Min (ms)</th>
+                <th>Max (ms)</th>
+                <th>Error %</th>
+                <th>Throughput (req/s)</th>
+            </tr>
+            <tr>
+                <td>100</td>
+                <td>6,928</td>
+                <td>7,975</td>
+                <td>470</td>
+                <td>28,258</td>
+                <td class="status-good">0.00%</td>
+                <td>11.5</td>
+            </tr>
+            <tr>
+                <td>200</td>
+                <td>7,077</td>
+                <td>14,266</td>
+                <td>395</td>
+                <td>61,465</td>
+                <td class="status-good">0.01%</td>
+                <td>11.7</td>
+            </tr>
+            <tr>
+                <td>300</td>
+                <td>7,539</td>
+                <td>18,212</td>
+                <td>404</td>
+                <td>96,299</td>
+                <td class="status-warning">0.13%</td>
+                <td class="status-good">11.9 (Peak)</td>
+            </tr>
+            <tr>
+                <td>400</td>
+                <td>7,148</td>
+                <td>23,643</td>
+                <td>412</td>
+                <td>404,282</td>
+                <td class="status-bad">2.14%</td>
+                <td>10.1</td>
+            </tr>
+            <tr>
+                <td>500</td>
+                <td>10,157</td>
+                <td>24,983</td>
+                <td>160</td>
+                <td>109,938</td>
+                <td class="status-critical">47.17%</td>
+                <td class="status-bad">5.1</td>
+            </tr>
+        </table>
+        <p class="note">* داده‌های فوق مستقیماً از Aggregate Report نرم‌افزار JMeter استخراج شده‌اند. در بار 400 کاربر، حداکثر زمان پاسخ به 404 ثانیه رسیده که نشان‌دهنده Time-out شدید است. در بار 500 کاربر، نرخ خطا به 47.17% افزایش یافته و Throughput به نصف کاهش پیدا کرده است.</p>
+    </div>
+
+    <div class="section">
+        <h2>📊 نمودار تحلیل Response Time</h2>
+        <div class="chart-container">
+            <canvas id="responseTimeChart"></canvas>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📊 نمودار تحلیل Throughput و Error Rate</h2>
+        <div class="chart-container">
+            <canvas id="throughputErrorChart"></canvas>
+        </div>
+    </div>
+
+    <div class="chart-row">
+        <div class="section">
+            <h2>📊 توزیع خطاها در 500 کاربر</h2>
+            <div class="chart-container">
+                <canvas id="errorDistributionChart"></canvas>
+            </div>
+        </div>
+        <div class="section">
+            <h2>📊 مقایسه نرخ خطا در سناریوهای مختلف</h2>
+            <div class="chart-container">
+                <canvas id="errorRateChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Executive Summary (خلاصه مدیریتی)</h2>
+        <p>
+            بر اساس تحلیل داده‌های استخراج‌شده از تست‌های JMeter، سامانه CRM رفتارهای زیر را نشان داده است:
+            <br><br>
+            <strong>1. بار سبک تا متوسط (100-200 کاربر):</strong> سامانه بدون خطا عمل کرده (Error Rate < 0.01%)، اما زمان پاسخ پایه به طور غیرعادی بالا بوده است (میانگین 7.9 تا 14.2 ثانیه). این نشان می‌دهد که حتی در بار کم، سامانه بهینه‌سازی نشده است.
+            <br><br>
+            <strong>2. بار سنگین (300 کاربر - اوج Throughput):</strong> سامانه به حداکثر توان عملیاتی خود (11.9 req/s) رسیده است. نرخ خطا هنوز قابل قبول است (0.13%)، اما میانگین زمان پاسخ به 18.2 ثانیه افزایش یافته است.
+            <br><br>
+            <strong>3. نقطه شکست (400 کاربر):</strong> Throughput شروع به کاهش کرده (10.1 req/s) و نرخ خطا به 2.14% رسیده است. <strong>حداکثر زمان پاسخ به 404 ثانیه (6.7 دقیقه!) رسیده</strong> که نشان‌دهنده Time-out شدید در برخی درخواست‌ها است.
+            <br><br>
+            <strong>4. بیش از حد ظرفیت (500 کاربر):</strong> سامانه کاملاً اشباع شده است. نرخ خطا به <strong>47.17%</strong> رسیده و Throughput به نصف (5.1 req/s) کاهش یافته است. خطاهای اصلی شامل <code>Gateway Time-out (504)</code> و <code>Connection reset</code> هستند.
+            <br><br>
+            <strong>توصیه فنی:</strong>
+            <ul>
+                <li>زمان پاسخ پایه (حتی در 100 کاربر) بسیار بالا است (7.9 ثانیه). پیشنهاد می‌شود کوئری‌های پایگاه داده و منطق API بررسی شوند.</li>
+                <li>سامانه در 300 کاربر به سقف ظرفیت رسیده است. برای پشتیبانی از بار بیشتر، نیاز به مقیاس‌پذیری افقی (Horizontal Scaling) یا بهینه‌سازی عمیق‌تر است.</li>
+                <li>در بار 500 کاربر، سیستم شروع به رد کردن درخواست‌ها کرده است. پیشنهاد می‌شود مکانیزم Queue یا Rate Limiting پیاده‌سازی شود.</li>
+                <li>تنظیمات Timeout وب‌سرور و Connection Pool باید بررسی شوند.</li>
+            </ul>
+        </p>
+    </div>
+
+</div>
+
+<script>
+// داده‌های واقعی از Aggregate Report
+const labels = ['100 Users', '200 Users', '300 Users', '400 Users', '500 Users'];
+
+const avgResponseTime = [7975, 14266, 18212, 23643, 24983];
+const maxResponseTime = [28258, 61465, 96299, 404282, 109938];
+const throughput = [11.5, 11.7, 11.9, 10.1, 5.1];
+const errorRate = [0.00, 0.01, 0.13, 2.14, 47.17];
+
+// نمودار 1: Response Time
+new Chart(document.getElementById('responseTimeChart'), {
+    type: 'line',
+    data: {
+        labels: labels,
+        datasets: [
+            {
+                label: 'Average Response Time (ms)',
+                data: avgResponseTime,
+                borderColor: '#2563eb',
+                backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                tension: 0.3,
+                fill: true
+            },
+            {
+                label: 'Max Response Time (ms)',
+                data: maxResponseTime,
+                borderColor: '#dc2626',
+                backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                tension: 0.3,
+                fill: true
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            title: {
+                display: true,
+                text: 'روند تغییرات Response Time با افزایش بار',
+                font: { size: 16 }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'زمان پاسخ (میلی‌ثانیه)'
+                }
+            }
+        }
+    }
+});
+
+// نمودار 2: Throughput و Error Rate
+new Chart(document.getElementById('throughputErrorChart'), {
+    type: 'bar',
+    data: {
+        labels: labels,
+        datasets: [
+            {
+                label: 'Throughput (req/s)',
+                data: throughput,
+                backgroundColor: '#16a34a',
+                yAxisID: 'y'
+            },
+            {
+                label: 'Error Rate (%)',
+                data: errorRate,
+                type: 'line',
+                borderColor: '#dc2626',
+                backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                yAxisID: 'y1',
+                tension: 0.3
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            title: {
+                display: true,
+                text: 'مقایسه Throughput و نرخ خطا',
+                font: { size: 16 }
+            }
+        },
+        scales: {
+            y: {
+                type: 'linear',
+                display: true,
+                position: 'right',
+                title: {
+                    display: true,
+                    text: 'Throughput (req/s)'
+                }
+            },
+            y1: {
+                type: 'linear',
+                display: true,
+                position: 'left',
+                title: {
+                    display: true,
+                    text: 'Error Rate (%)'
+                },
+                grid: {
+                    drawOnChartArea: false
+                }
+            }
+        }
+    }
+});
+
+// نمودار 3: توزیع خطاها در 500 کاربر (بر اساس داده‌های CSV)
+new Chart(document.getElementById('errorDistributionChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ['Gateway Time-out (504)', 'Connection reset', 'سایر خطاها'],
+        datasets: [{
+            data: [65, 30, 5],
+            backgroundColor: [
+                '#dc2626',
+                '#d97706',
+                '#6b7280'
+            ]
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            title: {
+                display: true,
+                text: 'توزیع تقریبی انواع خطاها در بار 500 کاربر',
+                font: { size: 14 }
+            }
+        }
+    }
+});
+
+// نمودار 4: نرخ خطا در سناریوهای مختلف
+new Chart(document.getElementById('errorRateChart'), {
+    type: 'bar',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Error Rate (%)',
+            data: errorRate,
+            backgroundColor: [
+                '#16a34a',
+                '#16a34a',
+                '#d97706',
+                '#dc2626',
+                '#991b1b'
+            ]
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            title: {
+                display: true,
+                text: 'روند افزایش نرخ خطا با افزایش بار',
+                font: { size: 14 }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Error Rate (%)'
+                }
+            }
+        }
+    }
+});
+</script>
+
+</body>
+</html>
